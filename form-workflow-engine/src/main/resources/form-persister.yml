@@ -1,0 +1,310 @@
+# persister.yml - Service Maps configuration for form workflow data persistence
+serviceMaps:
+  serviceName: form-workflow-engine
+  mappings:
+    # Form Definition Persistence
+    - version: 1.0
+      description: Persists form definition.
+      fromTopic: save-form-definition-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO FORM_DEFINITION(id, tenantId, formCode, formName, formVersion, formSchema, formFields, validationRules, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.id
+            - jsonPath: $.*.tenantId
+            - jsonPath: $.*.formCode
+            - jsonPath: $.*.formName
+            - jsonPath: $.*.formVersion
+            - jsonPath: $.*.formSchema
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.formFields
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.validationRules
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.createdBy
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.createdTime
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+
+    # Form Definition Update
+    - version: 1.0
+      description: Updates form definition.
+      fromTopic: update-form-definition-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE FORM_DEFINITION SET formName = ?, formVersion = ?, formSchema = ?, formFields = ?, validationRules = ?, additionalDetails = ?, lastModifiedBy = ?, lastModifiedTime = ?, rowVersion = ? WHERE id = ? AND isDeleted = false;
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.formName
+            - jsonPath: $.*.formVersion
+            - jsonPath: $.*.formSchema
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.formFields
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.validationRules
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.id
+
+    # Form Submission Persistence
+    - version: 1.0
+      description: Persists form submission.
+      fromTopic: save-form-submission-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO FORM_SUBMISSION(id, tenantId, formId, formCode, submissionData, submissionStatus, submittedBy, assignedTo, submissionDate, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.id
+            - jsonPath: $.*.tenantId
+            - jsonPath: $.*.formId
+            - jsonPath: $.*.formCode
+            - jsonPath: $.*.submissionData
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.submissionStatus
+            - jsonPath: $.*.submittedBy
+            - jsonPath: $.*.assignedTo
+            - jsonPath: $.*.submissionDate
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.createdBy
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.createdTime
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+        - query: INSERT INTO FORM_ATTACHMENT(id, tenantId, submissionId, fileName, fileType, fileSize, filePath, uploadedBy, uploadedTime, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*.attachments.*
+          jsonMaps:
+            - jsonPath: $.*.attachments.*.id
+            - jsonPath: $.*.attachments.*.tenantId
+            - jsonPath: $.*.attachments.*.submissionId
+            - jsonPath: $.*.attachments.*.fileName
+            - jsonPath: $.*.attachments.*.fileType
+            - jsonPath: $.*.attachments.*.fileSize
+            - jsonPath: $.*.attachments.*.filePath
+            - jsonPath: $.*.attachments.*.uploadedBy
+            - jsonPath: $.*.attachments.*.uploadedTime
+            - jsonPath: $.*.attachments.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.attachments.*.auditDetails.createdBy
+            - jsonPath: $.*.attachments.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.attachments.*.auditDetails.createdTime
+            - jsonPath: $.*.attachments.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.attachments.*.rowVersion
+            - jsonPath: $.*.attachments.*.isDeleted
+
+    # Form Submission Update
+    - version: 1.0
+      description: Updates form submission.
+      fromTopic: update-form-submission-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE FORM_SUBMISSION SET submissionData = ?, submissionStatus = ?, assignedTo = ?, additionalDetails = ?, lastModifiedBy = ?, lastModifiedTime = ?, rowVersion = ? WHERE id = ? AND isDeleted = false;
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.submissionData
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.submissionStatus
+            - jsonPath: $.*.assignedTo
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.id
+
+    # Workflow Definition Persistence
+    - version: 1.0
+      description: Persists workflow definition.
+      fromTopic: save-workflow-definition-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO WORKFLOW_DEFINITION(id, tenantId, workflowCode, workflowName, workflowVersion, workflowStates, workflowTransitions, businessRules, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.id
+            - jsonPath: $.*.tenantId
+            - jsonPath: $.*.workflowCode
+            - jsonPath: $.*.workflowName
+            - jsonPath: $.*.workflowVersion
+            - jsonPath: $.*.workflowStates
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.workflowTransitions
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.businessRules
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.createdBy
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.createdTime
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+
+    # Workflow Instance Persistence
+    - version: 1.0
+      description: Persists workflow instance.
+      fromTopic: save-workflow-instance-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO WORKFLOW_INSTANCE(id, tenantId, workflowId, workflowCode, entityId, entityType, currentState, nextState, workflowData, priority, assignedTo, startedBy, startedTime, completedTime, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.id
+            - jsonPath: $.*.tenantId
+            - jsonPath: $.*.workflowId
+            - jsonPath: $.*.workflowCode
+            - jsonPath: $.*.entityId
+            - jsonPath: $.*.entityType
+            - jsonPath: $.*.currentState
+            - jsonPath: $.*.nextState
+            - jsonPath: $.*.workflowData
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.priority
+            - jsonPath: $.*.assignedTo
+            - jsonPath: $.*.startedBy
+            - jsonPath: $.*.startedTime
+            - jsonPath: $.*.completedTime
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.createdBy
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.createdTime
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+        - query: INSERT INTO WORKFLOW_TRANSITION_HISTORY(id, tenantId, workflowInstanceId, fromState, toState, transitionBy, transitionTime, transitionReason, transitionData, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*.transitionHistory.*
+          jsonMaps:
+            - jsonPath: $.*.transitionHistory.*.id
+            - jsonPath: $.*.transitionHistory.*.tenantId
+            - jsonPath: $.*.transitionHistory.*.workflowInstanceId
+            - jsonPath: $.*.transitionHistory.*.fromState
+            - jsonPath: $.*.transitionHistory.*.toState
+            - jsonPath: $.*.transitionHistory.*.transitionBy
+            - jsonPath: $.*.transitionHistory.*.transitionTime
+            - jsonPath: $.*.transitionHistory.*.transitionReason
+            - jsonPath: $.*.transitionHistory.*.transitionData
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.transitionHistory.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.transitionHistory.*.auditDetails.createdBy
+            - jsonPath: $.*.transitionHistory.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.transitionHistory.*.auditDetails.createdTime
+            - jsonPath: $.*.transitionHistory.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.transitionHistory.*.rowVersion
+            - jsonPath: $.*.transitionHistory.*.isDeleted
+
+    # Workflow Instance Update
+    - version: 1.0
+      description: Updates workflow instance.
+      fromTopic: update-workflow-instance-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE WORKFLOW_INSTANCE SET currentState = ?, nextState = ?, workflowData = ?, assignedTo = ?, completedTime = ?, additionalDetails = ?, lastModifiedBy = ?, lastModifiedTime = ?, rowVersion = ? WHERE id = ? AND isDeleted = false;
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.currentState
+            - jsonPath: $.*.nextState
+            - jsonPath: $.*.workflowData
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.assignedTo
+            - jsonPath: $.*.completedTime
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.id
+
+    # Form Approval Persistence
+    - version: 1.0
+      description: Persists form approval.
+      fromTopic: save-form-approval-topic
+      isTransaction: true
+      queryMaps:
+        - query: INSERT INTO FORM_APPROVAL(id, tenantId, submissionId, workflowInstanceId, approvalLevel, approvalStatus, approvedBy, approvalTime, approvalComments, rejectionReason, additionalDetails, createdBy, lastModifiedBy, createdTime, lastModifiedTime, rowVersion, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.id
+            - jsonPath: $.*.tenantId
+            - jsonPath: $.*.submissionId
+            - jsonPath: $.*.workflowInstanceId
+            - jsonPath: $.*.approvalLevel
+            - jsonPath: $.*.approvalStatus
+            - jsonPath: $.*.approvedBy
+            - jsonPath: $.*.approvalTime
+            - jsonPath: $.*.approvalComments
+            - jsonPath: $.*.rejectionReason
+            - jsonPath: $.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.*.auditDetails.createdBy
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.createdTime
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+
+    # Delete Operations
+    - version: 1.0
+      description: Deletes form submission.
+      fromTopic: delete-form-submission-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE FORM_SUBMISSION SET lastModifiedBy = ?, lastModifiedTime = ?, rowVersion = ?, isDeleted = ? WHERE id = ?;
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+            - jsonPath: $.*.id
+
+    - version: 1.0
+      description: Deletes workflow instance.
+      fromTopic: delete-workflow-instance-topic
+      isTransaction: true
+      queryMaps:
+        - query: UPDATE WORKFLOW_INSTANCE SET lastModifiedBy = ?, lastModifiedTime = ?, rowVersion = ?, isDeleted = ? WHERE id = ?;
+          basePath: $.*
+          jsonMaps:
+            - jsonPath: $.*.auditDetails.lastModifiedBy
+            - jsonPath: $.*.auditDetails.lastModifiedTime
+            - jsonPath: $.*.rowVersion
+            - jsonPath: $.*.isDeleted
+            - jsonPath: $.*.id

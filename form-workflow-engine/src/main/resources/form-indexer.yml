@@ -1,0 +1,114 @@
+# indexer.yml - Service Maps configuration for form workflow indexing
+ServiceMaps:
+  serviceName: form-workflow-engine
+  version: 1.0.0
+  mappings:
+    # Form submission indexing
+    - topic: save-form-submission-topic
+      configKey: INDEX
+      indexes:
+        - name: formSubmissionIndex-v1
+          type: form_submission
+          id: $.*.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Form definition indexing
+    - topic: save-form-definition-topic
+      configKey: INDEX
+      indexes:
+        - name: formDefinitionIndex-v1
+          type: form_definition
+          id: $.*.formId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Workflow instance indexing
+    - topic: save-workflow-instance-topic
+      configKey: INDEX
+      indexes:
+        - name: workflowInstanceIndex-v1
+          type: workflow_instance
+          id: $.*.workflowInstanceId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Workflow definition indexing
+    - topic: save-workflow-definition-topic
+      configKey: INDEX
+      indexes:
+        - name: workflowDefinitionIndex-v1
+          type: workflow_definition
+          id: $.*.workflowId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Workflow transition indexing
+    - topic: save-workflow-transition-topic
+      configKey: INDEX
+      indexes:
+        - name: workflowTransitionIndex-v1
+          type: workflow_transition
+          id: $.*.transitionId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # User activity indexing
+    - topic: save-user-activity-topic
+      configKey: INDEX
+      indexes:
+        - name: userActivityIndex-v1
+          type: user_activity
+          id: $.*.activityId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Form approval indexing
+    - topic: save-form-approval-topic
+      configKey: INDEX
+      indexes:
+        - name: formApprovalIndex-v1
+          type: form_approval
+          id: $.*.approvalId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Document attachment indexing
+    - topic: save-document-attachment-topic
+      configKey: INDEX
+      indexes:
+        - name: documentAttachmentIndex-v1
+          type: document_attachment
+          id: $.*.documentId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Notification indexing
+    - topic: save-notification-topic
+      configKey: INDEX
+      indexes:
+        - name: notificationIndex-v1
+          type: notification
+          id: $.*.notificationId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime
+          
+    # Audit log indexing
+    - topic: save-audit-log-topic
+      configKey: INDEX
+      indexes:
+        - name: auditLogIndex-v1
+          type: audit_log
+          id: $.*.auditId
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.*.auditDetails.createdTime

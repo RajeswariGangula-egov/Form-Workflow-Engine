@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: form_workflow_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Raji@585
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - form-workflow-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: password
+    ports:
+      - "8180:8080"
+    depends_on:
+      - postgres
+    command: start-dev
+    networks:
+      - form-workflow-network
+
+  your-app:
+    image: openjdk:17-jdk-slim
+    # volumes:
+    #   - ./target/your-app.jar:/app/app.jar  # Add this - mount your JAR file
+    # command: java -jar /app/app.jar  # Add this - command to run your app
+    environment:
+      # Keycloak configuration
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: form-workflow-engne
+      KEYCLOAK_CLIENT_ID: form-workflow-app
+      KEYCLOAK_CLIENT_SECRET: octqjMBas5WDUiFzFVb7xejHJ7HGPDxw
+      # Database configuration
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: form_workflow_db
+      DB_USER: postgres
+      DB_PASSWORD: Raji@585
+    ports:
+      - "3000:8080"
+    depends_on:
+      - postgres
+      - keycloak
+    networks:
+      - form-workflow-network
+
+volumes:
+  postgres_data:
+
+networks:
+  form-workflow-network:
+    driver: bridge

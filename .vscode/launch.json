@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-FormWorkflowApplication<form-workflow-engine>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.form_workflow_engine.FormWorkflowApplication",
+            "projectName": "form-workflow-engine",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
