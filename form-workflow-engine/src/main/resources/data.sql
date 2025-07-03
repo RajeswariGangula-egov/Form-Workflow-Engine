@@ -1,7 +1,5 @@
--- Clear existing data (optional)
 TRUNCATE TABLE workflow_instances, form_submissions, workflow_definitions, form_templates RESTART IDENTITY CASCADE;
 
--- Sample Form Templates
 INSERT INTO form_templates (title, schema, created_at, created_by) VALUES 
 ('Leave Application', 
  '{"title": "Leave Application", "fields": [{"name": "reason", "type": "text", "required": true, "label": "Reason for Leave"}, {"name": "from_date", "type": "date", "required": true, "label": "From Date"}, {"name": "to_date", "type": "date", "required": true, "label": "To Date"}, {"name": "emergency_contact", "type": "text", "required": false, "label": "Emergency Contact"}]}', 
@@ -18,7 +16,6 @@ INSERT INTO form_templates (title, schema, created_at, created_by) VALUES
  NOW(), 
  'admin');
 
--- Sample Workflow Definitions
 INSERT INTO workflow_definitions (name, form_template_id, definition, created_at, created_by) VALUES 
 
 ('Leave Approval Workflow', 
