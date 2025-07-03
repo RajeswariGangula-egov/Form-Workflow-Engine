@@ -31,12 +31,9 @@ services:
 
   your-app:
     image: openjdk:17-jdk-slim
-    # volumes:
-    #   - ./target/your-app.jar:/app/app.jar  # Add this - mount your JAR file
-    # command: java -jar /app/app.jar  # Add this - command to run your app
     environment:
       # Keycloak configuration
-      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_URL: http://keycloak:8180
       KEYCLOAK_REALM: form-workflow-engne
       KEYCLOAK_CLIENT_ID: form-workflow-app
       KEYCLOAK_CLIENT_SECRET: octqjMBas5WDUiFzFVb7xejHJ7HGPDxw
@@ -47,7 +44,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: Raji@585
     ports:
-      - "3000:8080"
+      - "3000:8180"
     depends_on:
       - postgres
       - keycloak
